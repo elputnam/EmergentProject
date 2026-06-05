@@ -521,9 +521,9 @@ class Lattice{
 
   display(){
     //lines
-    strokeWeight(3);
+    strokeWeight(random(1,3));
     //fill(H-50, random(100), random(360), 0.2);
-    stroke(random(255));
+    stroke(random(200,300), 100, 100, 20);
 
     beginShape();
     vertex(this.loc.x, this.loc.y);
