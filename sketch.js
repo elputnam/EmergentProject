@@ -16,6 +16,8 @@ function setup() {
   mgr.addScene(BurnOut);
   mgr.addScene(AfterImage);
   mgr.addScene(BroadPixie);
+  mgr.addScene(Tether);
+  mgr.addScene(IndustriousFiber);
   mgr.showNextScene();
 }
 
@@ -29,7 +31,7 @@ function mousePressed() {
 
 function changeScene() {
   //mgr.showNextScene();
-  let chance = floor(random(1,7.9));
+  let chance = floor(random(1,9.9));
 
     if (chance == 1){
     mgr.showScene(BurnOut);
@@ -45,6 +47,10 @@ function changeScene() {
       mgr.showScene(AfterImage);
     } else if (chance == 7){
       mgr.showScene(BroadPixie);
+  } else if (chance == 8){
+      mgr.showScene(Tether);
+  } else if (chance == 9){
+      mgr.showScene(IndustriousFiber);
   }
 }
 // Returns true only when enough time has passed for the desired fps
@@ -137,9 +143,6 @@ this.parameters1 = function(){
    y2 = random(height);
    change1 += 10;
  }
-
-
-
 }
 
 this.parameters2 = function(){
@@ -234,9 +237,11 @@ function AngstyGeomtries() {
   const MIN_B = 0; MAX_B = 100;
   let inc1 = 1;
   let inc2 = 0.01;
+  let inc3 = 5;
   let x = 0;
   let y = 0;
-  let change;
+  let el1 = 51;
+  const MIN_C = 50; MAX_C = 300;
   let lastMs = 0;
   const FPS = 20;
 
@@ -252,9 +257,14 @@ function AngstyGeomtries() {
     frameCount++;
 
     background(0, alf);
+
+
+    push();
     translate(width / 2, height / 2);
+    //translate(mouseX, mouseY);
     rotate(deg);
 
+   
     for (let i = 0; i < 30; i++) {
       rectMode(CENTER);
       fill(180, random(100), random(100), random(10));
@@ -266,14 +276,28 @@ function AngstyGeomtries() {
       ellipse(random(50, 250), 0, 50);
     }
 
+    pop();
+
+    // stroke(255);
+    // strokeWeight(random(1,5))
+    fill(0);
+    noStroke();
+    ellipse(mouseX, mouseY, el1+random(-10,10), el1+random(-10,10), alf);
     alf -= inc1;
     deg -= inc2;
+    el1 += inc3;
+
+     if (el1 <= 50 || el1 >= 100) {
+        inc3 *= -1;  
+    }
 
     if (alf == MIN_B || alf == MAX_B) {
       inc1 *= -1;
       x = random(width / 3);
       y = random(height / 3);
     }
+
+     
 
     if (frameCount == change) {
       changeScene();
@@ -314,7 +338,7 @@ function CautiousDrug() {
     background(100, 100, bright1, 1);
 
     noStroke();
-    fill(random(360), bright2, 100);
+    fill(0, bright2, 100);
     push();
     translate(width / 2, height / 2);
     rotate(deg);
@@ -349,7 +373,7 @@ function CautiousDrug() {
           fill(0);
           rect(posX, posY, width / tileCount, height / tileCount);
         } else {
-          fill(100, 100, bright1, 10);
+          fill(180, 100, bright1, 10);
           rect(posX, posY, width / tileCount, height / tileCount);
         }
       }
@@ -440,16 +464,16 @@ function KindlyNotions() {
 
 //==================AfterImage=======================================
 function AfterImage() {
-let dance =[];
-let num = 100;
-//let l1;
-let H = 100;
-let wid = 0;
-var cirx;
-var ciry;
-//let cx = 200;
-//let cy = 200;
-//let color = []
+    let dance =[];
+    let num = 100;
+    //let l1;
+    let H = 100;
+    let wid = 0;
+    var cirx;
+    var ciry;
+    //let cx = 200;
+    //let cy = 200;
+    //let color = []
 
 this.setup = function() {
   for (let i = 0; i < num; i++){
@@ -461,10 +485,10 @@ this.setup = function() {
 }
 
 this.draw = function() {
-  background(10, 0.01);
+  background(10, 10);
   noFill();
   strokeWeight(random(10));
-  stroke(random(300-360), random(100), random(360), random(50));
+  stroke(random(300-360), random(100), random(100), random(50));
   ellipse(mouseX, mouseY, wid);
   for (let i = 0; i < dance.length; i++) {
   dance[i].display();
@@ -497,9 +521,9 @@ class Lattice{
 
   display(){
     //lines
-    strokeWeight(1);
+    strokeWeight(3);
     //fill(H-50, random(100), random(360), 0.2);
-    stroke(H, random(360), random(360));
+    stroke(random(255));
 
     beginShape();
     vertex(this.loc.x, this.loc.y);
@@ -617,5 +641,215 @@ this.flower = function(){
     curveTightness(random(3,6));
     curve(random(width), random(height), mouseX, mouseY, mouseX, mouseY,random(width), random(height));
   } 
+}
+}
+
+//===============Tether===========================
+
+function Tether(){
+  let dance = [];
+  let num;  
+  let j;
+  let lastMs = 0;
+  const FPS = 30;
+  
+
+this.setup = function() {
+  //background(random(30), 10);
+  num = height*0.05;
+  j = 0;
+  //num = 30;
+  for (i = 0; i < num; i++){
+    dance.push(new Element());
+  }
+  lastMs = millis();
+  }
+
+  this.draw = function() {
+     if (!throttle(lastMs, FPS)) return;
+    lastMs = millis();
+    background(random(30), random(10));
+
+  
+  for (i = 0; i < dance.length; i++){
+    dance[i].display();
+    dance[i].update();
+    dance[i].edges();
+  }
+  this.scribble();
+    
+  } 
+
+this.scribble = function(){
+  noFill();
+  for (i = 0; i < num; i++){
+    stroke(random(300,360), random(0,100), 100);
+    curveTightness(random(3,6));
+    curve(random(width), random(height), mouseX, mouseY, mouseX, mouseY,random(width), random(height));
+  }
+}
+
+class Element{
+  constructor(){
+    this.loc = createVector(random(width), random(height));
+    this.vel = createVector(0,0);
+    this.len = random(10,30);
+    //this.len = random(width*0.03, width*0.07);
+    this.ts = 3;
+    this.a = 0;
+  }
+  
+  display(){
+    strokeWeight(1);
+    fill(random(200,300), random(360), random(360));
+     //tethers
+    stroke(random(0,100), random(0,100), 100, 50);
+    line(this.loc.x, this.loc.y, mouseX, mouseY);
+    //bodies
+    stroke(0);
+    rectMode(CENTER);
+    circle(this.loc.x, this.loc.y, this.len);
+  }
+  
+  update(){
+    this.a = p5.Vector.random2D();
+    //this.a.mult(random(4));
+    this.a.mult(this.len*.3)
+    //this.a = createVector(random(-.1, .1), random(-.1, .1));
+    this.vel.add(this.a);
+    this.vel.limit(this.ts);
+    this.loc.add(this.vel);
+  }
+  
+  edges(){
+    if (this.loc.x > width) {
+      this.loc.x = 0;
+    }
+    if (this.loc.x < 0) {
+      this.loc.x = width;
+    }
+    if (this.loc.y > height) {
+      this.loc.y = 0;
+    }
+    if (this.loc.y < 0) {
+      this.loc.y = height;
+      }
+    }
+  }
+}
+
+//=================Industrious Fiber=================
+
+function IndustriousFiber(){
+  //I had some idea to create a web or net, but ended up with angsty threads and nervous pixels
+
+let nodes = [];
+let pixels = [];
+let rad = 0;
+let MAX = 200;
+let MIN = 0;
+let H1;
+let grow = 0.1;
+let lastMs = 0;
+  const FPS = 30;
+
+this.setup = function() {
+  rectMode(CENTER);
+  frameRate(30);
+  H1 = random(50,255);
+  //strings
+  for (var j = 0; j < 70; j++) {
+		nodes[j] = new Node(random(width), random(height), random(width), random(height));
+  }
+  //pixels
+  for (var k = 0; k < 100; k++){
+    pixels[k] = new Pixel(random(width), random(height), random(0.2));
+  }
+    lastMs = millis();
+  }
+
+  this.draw = function() {
+     if (!throttle(lastMs, FPS)) return;
+    lastMs = millis();
+  background(10, 10);
+ 
+  for (let l = 0; l < pixels.length; l++){
+    pixels[l].show();
+  }
+  
+  for (let i = 0; i < nodes.length; i++){
+    nodes[i].edges();
+    nodes[i].show();
+    nodes[i].move();
+  }
+
+ 
+  
+}
+
+class Node {
+  constructor(x1, y1, x2, y2){
+    this.v1 = createVector(x1, y1);
+    this.v2 = createVector(x2, y2);
+    // this.v3 = createVector(x3, y3);
+    this.grow = grow;
+  }
+  move(){
+    this.v1.add(random(-3, 3), random(-3, 3));
+    this.v2.add(random(-1,1), random(-1, 1));
+  }
+
+  edges(){
+    if (this.v1.x < 0 || this.v1.x > width){
+      this.v1.x = random(width);
+    }
+    if (this.v1.y < 0 || this.v1.y > height){
+      this.v1.y = random(height);
+    }
+    if (this.v2.x < 0 || this.v2.x > width){
+      this.v2.x = random(width);
+    }
+    if (this.v2.y < 0 || this.v2.y > height){
+      this.v2.y = random(height);
+    }
+  }
+  show(){
+    strokeWeight(1)
+    // stroke(0, random(100), random(100));
+    stroke(0, 100, 100);
+    line(this.v1.x, this.v1.y, this.v2.x, this.v2.y);
+     fill(0);
+    // fill(180, random(100), random(100));
+    noStroke();
+    circle(this.v1.x, this.v1.y, 20);
+    circle(this.v2.x, this.v2.y, 10);
+    
+
+
+  }
+}
+
+class Pixel{
+  constructor(x, y, grow){
+    this.v3 = createVector(x, y);
+    this.grow = grow; 
+  }
+
+  show(){
+    strokeWeight(3);
+    stroke(0);
+    // noStroke();
+    fill(H1, 30);
+    square(this.v3.x, this.v3.y, rad);
+    rad += this.grow;
+
+    //breathing
+    if (rad <= MIN || rad >= MAX){
+      this.grow *= -1;
+      H1 = random(50,255);
+      this.v3.x = random(width);
+      this.v3.y = random(height);
+    }
+  }
 }
 }
