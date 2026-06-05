@@ -523,7 +523,7 @@ class Lattice{
     //lines
     strokeWeight(random(1,3));
     //fill(H-50, random(100), random(360), 0.2);
-    stroke(random(200,300), 100, 100, 20);
+    stroke(random(200,300), random(100), random(100), random(20,40));
 
     beginShape();
     vertex(this.loc.x, this.loc.y);
